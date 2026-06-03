@@ -1,0 +1,151 @@
+====================================================================================================
+How to obtain Windows.winmd
+====================================================================================================
+
+Option 1 — GitHub Actions (recommended, works from Linux/CentOS with no Windows needed)
+  The workflow .github/workflows/extract-winmd.yml in this repo extracts Windows.winmd
+  from a Windows runner with the UWP SDK feature installed.
+
+  Steps:
+    1. Go to Actions → Extract Windows.winmd → Run workflow
+    2. Wait ~5 minutes
+    3. Download artifact → extract Windows.winmd (~7.4MB, contains all BLE interfaces)
+
+  Place it at: /tmp/Windows.winmd  (or anywhere, see below)
+
+Option 2 — Windows machine with SDK installed
+  Location:
+    C:\Program Files (x86)\Windows Kits\10\UnionMetadata\<version>\Windows.winmd
+  Pick the largest file if multiple versions exist.
+
+Option 3 — NuGet package (NOT recommended — 170KB stub, missing BLE interfaces)
+  Microsoft.Windows.SDK.Contracts contains a trimmed stub winmd only.
+  DO NOT use this for jcom — it does not contain IGattCharacteristic or IBluetoothLEDevice.
+
+----------------------------------------------------------------------------------------------------
+
+Telling jcom where to find Windows.winmd
+
+  System property:      java -Djcom.winmd.path=/tmp/Windows.winmd jcom.WinMDDump
+  Environment variable: export WINMD_PATH=/tmp/Windows.winmd
+  Auto-locate:          WinMDLocator.find() checks standard SDK paths automatically
+
+====================================================================================================
+
+cd $HOME/Projects/RobotCoding
+
+cat > $HOME/Projects/RobotCoding/.github/workflows/extract-winmd.yml << 'EOF'
+name: Extract Windows.winmd
+on:
+  workflow_dispatch:
+jobs:
+  extract:
+    runs-on: windows-latest
+    steps:
+      - name: Install Windows SDK
+        run: choco install windows-sdk-10-version-2004-all -y
+        shell: powershell
+
+      - name: Find full Windows.winmd
+        run: |
+          # List all winmd files and their sizes
+          Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\UnionMetadata" `
+            -Recurse -Filter "Windows.winmd" |
+            Select-Object FullName, @{N='MB';E={[math]::Round($_.Length/1MB,1)}} |
+            Format-Table
+
+          # Pick the largest one (the real one, not the stub)
+          $winmd = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\UnionMetadata" `
+                   -Recurse -Filter "Windows.winmd" |
+                   Sort-Object Length -Descending |
+                   Select-Object -First 1
+          Write-Host "Using: $($winmd.FullName) ($([math]::Round($winmd.Length/1MB,1)) MB)"
+          Copy-Item $winmd.FullName ./Windows.winmd
+        shell: powershell
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-winmd
+          path: Windows.winmd
+          retention-days: 90
+EOF
+
+git add .github/workflows/extract-winmd.yml
+git commit -m "Add workflow to extract Windows.winmd from SDK runner"
+git push
+
+
+Go to https://github.com/Collaboration-Ambengan/RobotCoding/actions
+Click 'Extract Windows.winmd' → Run workflow, wait until it is complete
+Download the artifact ZIP, extract Windows.winmd to /tmp
+
+
+git rm .github/workflows/extract-winmd.yml
+git commit -m "Remove workflow to extract Windows.winmd from SDK runner"
+git push
+
+====================================================================================================
+
+claude --resume 3d1838de-20f7-4f5f-878f-a567abbffe90
+
+
+read CLAUDE.md and PROGRESS.md, continue from next incomplete step, one method at a time, commit after one file is complete.
+
+
+## Note on com/ and winrt/
+These compile on Linux but require Windows + combase.dll at runtime.
+
+
+Do a cleanup pass on `ecma335/*`, `winmd/*`, `com/*`, `winrt/*`, and `WinMDDump.java` :
+    - add null on all parameters and variable declarations wherever possible
+    - consistent naming conventions
+    - remove redundant null checks
+    - simplify overly verbose methods
+    - do NOT change any logic or method signatures
+    - do NOT change the coding style
+
+
+
+
+
+1. Create separate jcom repo on GitHub
+2. Add LICENSE, NOTICE, CLA.md
+3. Set up cla-assistant.io
+4. Move/copy jcom/ source there
+5. Make public
+
+NOTICE
+jcom
+Copyright (C) 2026 Collaboration-Ambengan
+https://github.com/Collaboration-Ambengan
+
+jcom/
+├── LICENSE    ← full Apache 2.0 text
+├── NOTICE     ← attribution
+└── src/
+    └── jcom/
+        └── **/*.java  ← each has copyright header
+
+
+
+
+
+Option A — submodule:
+  RobotCoding/
+    └── gui_frontend/src/jcom/  ← git submodule → Collaboration-Ambengan/jcom
+
+Option B — JAR via JitPack:
+  gui_frontend/Makefile adds:
+    https://jitpack.io/com/github/Collaboration-Ambengan/jcom/...
+
+
+
+
+
+export unc="/opt/uncrustify-0.83.0/bin/uncrustify -c $HOME/Projects/JxMake/0_excluded_directory/personal/0-Uncrustify.cfg"
+
+find . -type f \( -name "*.java" \) -print0 |
+while IFS= read -r -d '' f; do
+    echo "Processing $f"
+    $unc --replace --no-backup "$f"
+done
