@@ -1,3 +1,9 @@
+> These instructions are for interactive local development only.
+> If you are running as a CI bot, GitHub Action, or any automated
+> agent, ignore the commit and tooling sections and follow your
+> workflow's own rules. Implementation notes (file structure,
+> compilation strategy, test commands) may still be relevant.
+
 # jcom Implementation Guide
 
 ## Current task
