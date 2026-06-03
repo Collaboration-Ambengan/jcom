@@ -37,20 +37,21 @@ WinRT runtime binding layer.
 
 ## Usage as a submodule
 
-This repo is designed to be used as a git submodule. Check it out into the
-`gui_frontend/src/jcom` directory of the parent repo so that the package
-structure resolves correctly:
+This repo is designed to be used as a git submodule. Add it into a directory
+named `jcom` inside your project's source tree so that Java import paths
+resolve correctly. The directory name must be `jcom` — the package root
+depends on it.
 
 ```bash
-# From the parent repo root
-git submodule add git@github.com:Collaboration-Ambengan/jcom.git gui_frontend/src/jcom
-git submodule update --init gui_frontend/src/jcom
+# From your project root — adjust the path to match your source layout
+git submodule add git@github.com:Collaboration-Ambengan/jcom.git src/jcom
+git submodule update --init src/jcom
 ```
 
-After checkout the layout should be:
+After checkout the layout inside `jcom/` should be:
 
 ```
-gui_frontend/src/jcom/
+src/jcom/               ← submodule root (name this directory "jcom")
 ├── com/
 │   ├── COMMethod.java
 │   ├── COMObject.java
