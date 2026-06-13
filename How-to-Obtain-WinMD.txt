@@ -30,14 +30,45 @@ Telling jcom where to find Windows.winmd
   Environment variable: export WINMD_PATH=/tmp/Windows.winmd
   Auto-locate:          WinMDLocator.find() checks standard SDK paths automatically
 
+----------------------------------------------------------------------------------------------------
+
+LEGAL NOTICE — Windows.winmd redistribution
+
+  Windows.winmd is a Microsoft proprietary file distributed as part of the Windows SDK.
+  It is covered by the Microsoft Software License Terms for the Windows SDK.
+
+  YOU MUST NOT:
+    - Redistribute Windows.winmd or include it in any repository, release, or artifact
+      intended for public or third-party consumption.
+    - Commit Windows.winmd to any Git repository (public or private).
+
+  The GitHub Actions workflow in Option 1 / NOTE : EXAMPLE FLOW below extracts the file
+  from a Microsoft-licensed runner environment for your own local use only. The extracted
+  artifact is for your personal build environment and must not be shared or republished.
+
 ====================================================================================================
 
 NOTE : EXAMPLE FLOW
 
+  !! IMPORTANT — READ BEFORE USING !!
 
-cd $HOME/Projects/jcom
+  The shell commands and workflow YAML below are an ILLUSTRATIVE EXAMPLE ONLY.
+  They are provided to show the general approach and may break at any time due to:
+    - Chocolatey package name or version changes
+    - Windows SDK installation path changes on GitHub-hosted runners
+    - GitHub Actions runner image updates
+    - actions/upload-artifact API or version changes
 
-cat > $HOME/Projects/jcom/.github/workflows/extract-winmd.yml << 'EOF'
+  Do NOT copy-paste this blindly into production. Verify all package names, paths,
+  and action versions against current documentation before use.
+
+  The extracted Windows.winmd file is for your own local use only — see LEGAL NOTICE above.
+
+----------------------------------------------------------------------------------------------------
+
+cd <path/to/jcom>
+
+cat > <path/to/jcom>/.github/workflows/extract-winmd.yml << 'WORKFLOW'
 name: Extract Windows.winmd
 on:
   workflow_dispatch:
@@ -71,14 +102,14 @@ jobs:
           name: windows-winmd
           path: Windows.winmd
           retention-days: 90
-EOF
+WORKFLOW
 
 git add .github/workflows/extract-winmd.yml
 git commit -m "Add workflow to extract Windows.winmd from SDK runner"
 git push
 
 
-Go to https://github.com/Collaboration-Ambengan/jcom/actions
+Go to https://github.com/<org>/<repo>/actions
 Click 'Extract Windows.winmd' → Run workflow, wait until it is complete
 Download the artifact ZIP, extract Windows.winmd to /tmp
 
@@ -89,7 +120,16 @@ git push
 
 ====================================================================================================
 
-NOTE : TEMPORARY PROJECT'S INSTRUCTIONS
+NOTE : TEMPORARY PROJECT'S INSTRUCTIONS — FOR INTERNAL DEVELOPMENT USE ONLY
+
+  !! THIS SECTION IS NOT INTENDED FOR END USERS !!
+
+  The instructions below are temporary internal guidance for project contributors only.
+  They describe the current development workflow state and are subject to change or removal
+  without notice. Do not follow these instructions unless you are an active contributor
+  with full context of the project's current state.
+
+----------------------------------------------------------------------------------------------------
 
 Read CLAUDE.md and PROGRESS.md, continue from next incomplete step, one method at a time, commit after one file is complete.
 
