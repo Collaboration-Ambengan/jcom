@@ -32,9 +32,12 @@ Telling jcom where to find Windows.winmd
 
 ====================================================================================================
 
-cd $HOME/Projects/RobotCoding
+NOTE : EXAMPLE FLOW
 
-cat > $HOME/Projects/RobotCoding/.github/workflows/extract-winmd.yml << 'EOF'
+
+cd $HOME/Projects/jcom
+
+cat > $HOME/Projects/jcom/.github/workflows/extract-winmd.yml << 'EOF'
 name: Extract Windows.winmd
 on:
   workflow_dispatch:
@@ -75,7 +78,7 @@ git commit -m "Add workflow to extract Windows.winmd from SDK runner"
 git push
 
 
-Go to https://github.com/Collaboration-Ambengan/RobotCoding/actions
+Go to https://github.com/Collaboration-Ambengan/jcom/actions
 Click 'Extract Windows.winmd' → Run workflow, wait until it is complete
 Download the artifact ZIP, extract Windows.winmd to /tmp
 
@@ -86,60 +89,9 @@ git push
 
 ====================================================================================================
 
-claude --resume 3d1838de-20f7-4f5f-878f-a567abbffe90
+NOTE : TEMPORARY PROJECT'S INSTRUCTIONS
 
-
-read CLAUDE.md and PROGRESS.md, continue from next incomplete step, one method at a time, commit after one file is complete.
-
-
-## Note on com/ and winrt/
-These compile on Linux but require Windows + combase.dll at runtime.
-
-
-Do a cleanup pass on `ecma335/*`, `winmd/*`, `com/*`, `winrt/*`, and `WinMDDump.java` :
-    - add null on all parameters and variable declarations wherever possible
-    - consistent naming conventions
-    - remove redundant null checks
-    - simplify overly verbose methods
-    - do NOT change any logic or method signatures
-    - do NOT change the coding style
-
-
-
-
-
-1. Create separate jcom repo on GitHub
-2. Add LICENSE, NOTICE, CLA.md
-3. Set up cla-assistant.io
-4. Move/copy jcom/ source there
-5. Make public
-
-NOTICE
-jcom
-Copyright (C) 2026 Collaboration-Ambengan
-https://github.com/Collaboration-Ambengan
-
-jcom/
-├── LICENSE    ← full Apache 2.0 text
-├── NOTICE     ← attribution
-└── src/
-    └── jcom/
-        └── **/*.java  ← each has copyright header
-
-
-
-
-
-Option A — submodule:
-  RobotCoding/
-    └── gui_frontend/src/jcom/  ← git submodule → Collaboration-Ambengan/jcom
-
-Option B — JAR via JitPack:
-  gui_frontend/Makefile adds:
-    https://jitpack.io/com/github/Collaboration-Ambengan/jcom/...
-
-
-
+Read CLAUDE.md and PROGRESS.md, continue from next incomplete step, one method at a time, commit after one file is complete.
 
 
 export unc="/opt/uncrustify-0.83.0/bin/uncrustify -c $HOME/Projects/JxMake/0_excluded_directory/personal/0-Uncrustify.cfg"
